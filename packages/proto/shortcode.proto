@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package shortcode;
+
+service ShortCodeService {
+  rpc GetShortCode (Empty) returns (ShortCodeResponse);
+}
+
+message Empty {}
+
+message ShortCodeResponse {
+  string code = 1;
+}
