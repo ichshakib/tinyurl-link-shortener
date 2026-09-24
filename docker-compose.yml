@@ -1,0 +1,56 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tinyurl
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  url-gen:
+    build:
+      context: .
+      dockerfile: apps/url-generation-service/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/tinyurl
+    depends_on:
+      - db
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgresql://user:password@db:5432/tinyurl
+      REDIS_URL: redis://redis:6379
+      URL_GEN_SERVICE_URL: url-gen:50051
+    depends_on:
+      - db
+      - redis
+      - url-gen
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    depends_on:
+      - server
+
+volumes:
+  postgres_data:
