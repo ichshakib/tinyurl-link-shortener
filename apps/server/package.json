@@ -1,0 +1,40 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "Main backend for TinyURL",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node dist/index.js\"",
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
+    "@grpc/proto-loader": "^0.8.1",
+    "@workspace/logger": "workspace:*",
+    "@workspace/middlewares": "workspace:*",
+    "@workspace/proto": "workspace:*",
+    "@workspace/utils": "workspace:*",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "ioredis": "^5.10.1",
+    "morgan": "^1.10.1",
+    "pg": "^8.20.0",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.6.2",
+    "@types/pg": "^8.20.0",
+    "tsc-watch": "^7.2.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}
