@@ -107,7 +107,6 @@ export default function Home() {
   return (
     <div className="italic-text-none min-h-screen bg-white font-sans text-slate-800 selection:bg-indigo-100">
       <main className="mx-auto max-w-2xl px-6 py-20">
-        
         {/* Header Section */}
         <div className="mb-12 flex items-center justify-between">
           <div>
@@ -126,7 +125,7 @@ export default function Home() {
             <Icon icon="mdi:github" className="h-6 w-6" />
           </a>
         </div>
-        
+
         {/* URL Shortener Form Section */}
         <div className="mb-16">
           <form onSubmit={handleShorten} className="flex flex-col gap-4">
@@ -149,7 +148,7 @@ export default function Home() {
           {/* Display error message if it exists */}
           {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
         </div>
-        
+
         {/* Recent Links List Section */}
         <div className="space-y-6">
           <h2 className="text-xs font-semibold tracking-wider text-slate-400">
@@ -188,7 +187,6 @@ export default function Home() {
                         {item.originalUrl}
                       </p>
                     </div>
-                    
                     {/* Actions: Clicks, Copy, Delete */}
                     <div className="flex items-center gap-3">
                       <span className="rounded bg-slate-50 px-2 py-1 text-xs text-slate-400">
@@ -220,7 +218,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      
+
       {/* Footer Section */}
       <footer className="mx-auto flex max-w-2xl justify-between border-t border-slate-50 px-6 py-10 text-xs text-slate-300">
         <p>© 2024 TinyURL</p>

@@ -10,6 +10,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d tinyurl"]
+      interval: 2s
+      timeout: 3s
+      retries: 5
+      start_period: 2s
 
   redis:
     image: redis:7-alpine
@@ -24,7 +30,8 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/tinyurl
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   server:
     build:
@@ -35,11 +42,15 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/tinyurl
       REDIS_URL: redis://redis:6379
+      URL_GENERATION_SERVICE_URL: url-gen:50051
       URL_GEN_SERVICE_URL: url-gen:50051
     depends_on:
-      - db
-      - redis
-      - url-gen
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      url-gen:
+        condition: service_started
 
   web:
     build:

@@ -35,17 +35,17 @@ export const shortenUrl = asyncHandler(async (req: Request, res: Response) => {
 
   // Request a new unique short code from the gRPC ShortCodeService
   const shortCodeStr = await shortCodeService.getCode()
-  
+
   // Insert the new short code and original URL mapping into the PostgreSQL database
   await dbPool.query(
     "INSERT INTO urls (original_url, short_code) VALUES ($1, $2) RETURNING *",
     [url, shortCodeStr]
   )
 
-  // Cache the mapping in Redis. Key: short code, Value: original URL. 
+  // Cache the mapping in Redis. Key: short code, Value: original URL.
   // 'EX', 86400 sets an expiration time of 24 hours (86400 seconds)
   await redis.set(shortCodeStr, url, "EX", 86400)
-  
+
   // Add the short code to a Redis Sorted Set ('cache:frequency') with an initial score of 1.
   // This can be used later to track the most frequently accessed URLs.
   await redis.zadd("cache:frequency", 1, shortCodeStr)
@@ -65,7 +65,7 @@ export const getUrls = asyncHandler(async (req: Request, res: Response) => {
   const result = await dbPool.query(
     "SELECT * FROM urls ORDER BY created_at DESC"
   )
-  
+
   // Format the raw database rows into a cleaner structure for the API response
   const formattedUrls = result.rows.map((row) => ({
     shortCode: row.short_code, // Map snake_case to camelCase
@@ -73,7 +73,7 @@ export const getUrls = asyncHandler(async (req: Request, res: Response) => {
     createdAt: row.created_at, // Map snake_case to camelCase
     clicks: row.clicks, // Pass the click count through
   }))
-  
+
   // Send a successful 200 OK response with the formatted list of URLs
   res.status(200).json({
     success: true,
@@ -85,7 +85,7 @@ export const getUrls = asyncHandler(async (req: Request, res: Response) => {
 export const deleteUrl = asyncHandler(async (req: Request, res: Response) => {
   const { shortCode } = req.params // Extract the short code from the route parameters (e.g., /api/urls/:shortCode)
   const shortCodeStr = shortCode as string // Ensure shortCode is treated as a string
-  
+
   // Execute a database query to delete the URL record matching the given short code
   const result = await dbPool.query("DELETE FROM urls WHERE short_code = $1", [
     shortCodeStr,
@@ -110,7 +110,7 @@ export const deleteUrl = asyncHandler(async (req: Request, res: Response) => {
 export const redirectUrl = asyncHandler(async (req: Request, res: Response) => {
   const { shortCode } = req.params // Extract the short code from the route parameters (e.g., /:shortCode)
   const shortCodeStr = shortCode as string // Ensure it's typed as a string
-  
+
   // Attempt to retrieve the original URL from the Redis cache first (fast path)
   const cachedUrl = await redis.get(shortCodeStr)
 
