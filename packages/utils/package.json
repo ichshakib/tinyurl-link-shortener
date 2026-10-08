@@ -1,0 +1,26 @@
+{
+  "name": "@workspace/utils",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p .",
+    "dev": "tsc-watch -p .",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@workspace/typescript-config": "workspace:*",
+    "express": "^5.2.1",
+    "tsc-watch": "^7.2.0",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  },
+  "peerDependencies": {
+    "express": "latest"
+  }
+}
