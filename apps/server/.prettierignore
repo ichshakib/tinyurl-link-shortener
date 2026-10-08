@@ -1,0 +1,7 @@
+node_modules
+dist
+.turbo
+tmp
+pnpm-lock.yaml
+logs
+*.log
